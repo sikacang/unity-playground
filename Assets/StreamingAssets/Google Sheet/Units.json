@@ -1,0 +1,26 @@
+[
+  {
+    "Name": "Slime",
+    "Health": 1000.0,
+    "Damage": 15.0,
+    "Id": "UNIT001"
+  },
+  {
+    "Name": "Adelaide",
+    "Health": 2350.0,
+    "Damage": 55.0,
+    "Id": "UNIT002"
+  },
+  {
+    "Name": "Slasher",
+    "Health": 1200.0,
+    "Damage": 105.0,
+    "Id": "UNIT003"
+  },
+  {
+    "Name": "Kisser",
+    "Health": 555.0,
+    "Damage": 1000.0,
+    "Id": "UNIT004"
+  }
+]

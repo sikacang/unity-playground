@@ -1,0 +1,52 @@
+[
+  {
+    "Arr": [
+      {
+        "ItemId": "ITEM001",
+        "DropType": "Bonus",
+        "ItemType": "Recollection",
+        "Amount": 0,
+        "Chance": 0.0
+      },
+      {
+        "ItemId": "ITEM002",
+        "DropType": "Bonus",
+        "ItemType": "Item",
+        "Amount": 25,
+        "Chance": 0.0
+      },
+      {
+        "ItemId": "ITEM002",
+        "DropType": "Chance",
+        "ItemType": "Item",
+        "Amount": 25,
+        "Chance": 24.0
+      }
+    ],
+    "Id": "RWD001"
+  },
+  {
+    "Arr": [
+      {
+        "ItemId": "ITEM002",
+        "DropType": "Bonus",
+        "ItemType": "Item",
+        "Amount": 15,
+        "Chance": 0.0
+      }
+    ],
+    "Id": "RWD002"
+  },
+  {
+    "Arr": [
+      {
+        "ItemId": "ITEM003",
+        "DropType": "Bonus",
+        "ItemType": "Item",
+        "Amount": 15,
+        "Chance": 50.0
+      }
+    ],
+    "Id": "RWD003"
+  }
+]

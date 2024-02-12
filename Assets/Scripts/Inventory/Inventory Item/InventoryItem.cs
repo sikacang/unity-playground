@@ -14,16 +14,34 @@ namespace Tools.Inventory
         [ShowInInspector, ReadOnly]
         protected int _quantity;
 
-        public InventoryItem(ItemData data, int quantity)
+        public InventoryItem(ItemData data)
         {
-            this._data = data;
-            this._quantity = quantity;
+            _data = data;
         }
 
-        public virtual bool TryAddQuantity(int amount)
+        public virtual int AddQuantity(int amount)
         {
-            _quantity += amount;
-            return true;
+            switch (_data.ItemSlotType)
+            {
+                case ItemSlotType.Stack:
+                    if (_quantity + amount > Data.MaxStack)
+                    {
+                        int leftOver = _quantity + amount - Data.MaxStack;
+                        _quantity = Data.MaxStack;
+                        return leftOver;
+                    }
+                    else
+                    {
+                        _quantity += amount;
+                        return 0;
+                    }
+                    
+                case ItemSlotType.Single:
+                    _quantity = 1;
+                    return 0;
+            }
+
+            return 0;
         }
 
         public virtual bool ReduceQuantity(int amount)

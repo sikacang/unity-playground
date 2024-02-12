@@ -14,7 +14,12 @@ namespace Tools.Inventory
 
         public string Name;
         public string Description;
+
+        [Title("Amount Settings")]
         public ItemSlotType ItemSlotType;
+        [ShowIf("ItemSlotType", ItemSlotType.Stack)]
+        public int MaxStack = 99;
+
 
         private ItemDatabase _itemDatabase;
 

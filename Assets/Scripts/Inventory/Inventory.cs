@@ -15,12 +15,27 @@ namespace Tools.Inventory
         {
             if(HasItem(out InventoryItem itemInstance, itemData))
             {
-                itemInstance.TryAddQuantity(amount);
+                AddStackedItem(itemInstance);
             }
             else
             {
-                var newItem = new InventoryItem(itemData, amount);
-                items.Add(newItem);
+                itemInstance = new InventoryItem(itemData);
+                items.Add(itemInstance);
+                AddStackedItem(itemInstance);
+            }
+
+            void AddStackedItem(InventoryItem itemInstance)
+            {
+                while (amount > 0)
+                {
+                    amount = itemInstance.AddQuantity(amount);
+                    if (amount > 0)
+                    {
+                        itemInstance = new InventoryItem(itemData);
+                        amount = itemInstance.AddQuantity(amount);
+                        items.Add(itemInstance);
+                    }
+                }
             }
         }
 
@@ -44,6 +59,29 @@ namespace Tools.Inventory
             }
         }
 
+        public void RemoveItem(InventoryItem item)
+        {
+            if (items.Contains(item))
+            {
+                items.Remove(item);
+            }
+            else
+            {
+                Debug.Log($"Item {item.Data.name} not found in inventory");
+            }
+        }
+
+        public void RemoveItem(int index)
+        {
+            if (index < 0 || index >= items.Count)
+            {
+                Debug.Log($"Index {index} is out of range");
+                return;
+            }
+
+            items.RemoveAt(index);
+        }
+
         public void ReduceItem(ItemData itemData, int amount)
         {
             bool hasItem = HasItem(out InventoryItem itemInstance, itemData);
@@ -64,7 +102,10 @@ namespace Tools.Inventory
         // Private method
         private bool HasItem(out InventoryItem itemInstance, ItemData itemData)
         {
-            itemInstance = items.FirstOrDefault(item => item.IsSameItem(itemData));
+            itemInstance = items.Where(name => name.IsSameItem(itemData))
+                .OrderByDescending(name => name.Quantity)
+                .LastOrDefault();
+
             return itemInstance != null;
         }
     }

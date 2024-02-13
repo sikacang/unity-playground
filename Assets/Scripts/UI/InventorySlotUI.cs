@@ -46,6 +46,17 @@ namespace Tools.Inventory.UI
             itemAmountText.text = amount.ToString();
         }
 
+        public void SetActive(bool value)
+        {
+            gameObject.SetActive(value);
+
+            if (value == false)
+            {
+                _item = null;
+                _onRemoveItem = null;
+            }
+        }
+
         private void OnRemoveItem()
         {
             _onRemoveItem?.Invoke(this);

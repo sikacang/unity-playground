@@ -38,7 +38,7 @@ namespace Tools.Inventory
                     
                 case ItemSlotType.Single:
                     _quantity = 1;
-                    return 0;
+                    return amount - 1;
             }
 
             return 0;
@@ -59,6 +59,19 @@ namespace Tools.Inventory
         public bool IsSameItem(ItemData itemData)
         {
             return _data == itemData;
+        }
+    
+        public bool CanAddQuantity()
+        {
+            switch (_data.ItemSlotType)
+            {
+                case ItemSlotType.Stack:
+                    return _quantity < Data.MaxStack;
+                case ItemSlotType.Single:
+                    return _quantity < 1;
+            }
+
+            return false;
         }
     }
 }

@@ -28,6 +28,6 @@ public class InventoryDebugger : MonoBehaviour
     [Button("Reduce Item")]
     private void ReduceItem(ItemData data, int amount)
     {
-        inventory.ReduceItem(data, amount);
+        
     }
 }

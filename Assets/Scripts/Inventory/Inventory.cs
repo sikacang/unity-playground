@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using static UnityEditor.Progress;
+using System.Collections;
 
 namespace Tools.Inventory
 {
@@ -17,6 +18,7 @@ namespace Tools.Inventory
         // Events
         private Action<ItemEventArgs> _onItemAdded;
         private Action<ItemEventArgs> _onItemRemoved;
+        private Action<ItemEventArgs> _onItemReduced;
         private Action<List<InventoryItem>> _onRefreshSlots;
 
         // Public method
@@ -24,35 +26,38 @@ namespace Tools.Inventory
         {
             if(HasItem(out InventoryItem itemInstance, itemData))
             {
-                AddStackedItem(itemInstance);
+                StartCoroutine(AddItemCoroutine(itemInstance, itemData, amount));
             }
             else
             {
                 itemInstance = new InventoryItem(itemData);
                 items.Add(itemInstance);
-                AddStackedItem(itemInstance);
+                StartCoroutine(AddItemCoroutine(itemInstance, itemData, amount));
             }
+        }
 
-            _onItemAdded?.Invoke(new ItemEventArgs(itemInstance, items.Count - 1));            
-
-            void AddStackedItem(InventoryItem itemInstance)
+        IEnumerator AddItemCoroutine(InventoryItem itemInstance, ItemData itemData, int amount)
+        {
+            int tryAmount = amount;
+            while (amount > 0 && tryAmount > 0)
             {
-                int tryAmount = amount;
-                while (amount > 0 && tryAmount > 0)
+                if (itemInstance.CanAddQuantity())
                 {
-                    if(itemInstance.CanAddQuantity())
-                        amount = itemInstance.AddQuantity(amount);
-                    
-                    if (amount > 0)
-                    {
-                        itemInstance = new InventoryItem(itemData);
-                        amount = itemInstance.AddQuantity(amount);
-                        items.Add(itemInstance);
-                    }
-
-                    tryAmount--;
+                    amount = itemInstance.AddQuantity(amount);
+                    _onItemAdded?.Invoke(new ItemEventArgs(itemInstance, items.IndexOf(itemInstance)));
                 }
-            }
+
+                if (amount > 0)
+                {
+                    itemInstance = new InventoryItem(itemData);
+                    amount = itemInstance.AddQuantity(amount);
+                    items.Add(itemInstance);
+                    _onItemAdded?.Invoke(new ItemEventArgs(itemInstance, items.IndexOf(itemInstance)));
+                }
+
+                yield return null;
+                tryAmount--;
+            }            
         }
 
         public void RemoveItem(ItemData itemData)
@@ -80,6 +85,7 @@ namespace Tools.Inventory
             if (items.Contains(item))
             {
                 int index = items.IndexOf(item);
+                
                 items.Remove(item);
                 
                 BlastRemoveEvent(item, index);
@@ -98,25 +104,27 @@ namespace Tools.Inventory
                 return;
             }
 
-            BlastRemoveEvent(items[index], index);
-
+            var removedItem = items[index];
             items.RemoveAt(index);
+
+            BlastRemoveEvent(removedItem, index);
         }
 
-        public void ReduceItem(ItemData itemData, int amount)
+        public void ReduceItem(InventoryItem item, int amount)
         {
-            bool hasItem = HasItem(out InventoryItem itemInstance, itemData);
-            if(hasItem)
+            if (items.Contains(item))
             {
-                bool isEmpty = itemInstance.ReduceQuantity(amount);
-                if(isEmpty)
-                    RemoveItem(itemData);                
+                bool isEmpty = item.ReduceQuantity(amount);
+                Debug.Log($"Item {item.Data.name} reduced by {amount} in inventory");
+                
+                if (isEmpty)
+                    RemoveItem(item);                
                 else
-                    Debug.Log($"Item {itemData.name} reduced by {amount} in inventory");                
+                    _onItemReduced?.Invoke(new ItemEventArgs(item, items.IndexOf(item)));                
             }
             else
             {
-                Debug.Log($"Item {itemData.name} not found in inventory");            
+                Debug.Log($"Item {item.Data.name} not found in inventory");
             }
         }
 
@@ -135,6 +143,11 @@ namespace Tools.Inventory
             _onRefreshSlots += callback;
         }
 
+        public void AddItemReducedListener(Action<ItemEventArgs> callback)
+        {
+            _onItemReduced += callback;
+        }
+
         public void RemoveItemAddListener(Action<ItemEventArgs> callback)
         {
             _onItemAdded -= callback;
@@ -148,6 +161,11 @@ namespace Tools.Inventory
         public void RemoveRefreshSlotsListener(Action<List<InventoryItem>> callback)
         {
             _onRefreshSlots -= callback;
+        }
+
+        public void RemoveItemReducedListener(Action<ItemEventArgs> callback)
+        {
+            _onItemReduced -= callback;
         }
 
         // Private method

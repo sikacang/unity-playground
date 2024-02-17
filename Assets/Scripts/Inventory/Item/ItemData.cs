@@ -15,6 +15,9 @@ namespace Tools.Inventory
         public string Name;
         public string Description;
 
+        [PreviewField(50, ObjectFieldAlignment.Left)]
+        public Sprite Icon;
+
         [Title("Amount Settings")]
         public ItemSlotType ItemSlotType;
         [ShowIf("ItemSlotType", ItemSlotType.Stack)]

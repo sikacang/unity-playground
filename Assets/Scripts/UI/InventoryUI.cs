@@ -7,7 +7,7 @@ namespace Tools.Inventory.UI
     public class InventoryUI : MonoBehaviour
     {
         [SerializeField]
-        private Inventory inventory;
+        private SimpleInventory inventory;
 
         [Header("Item Lists")]
         [SerializeField]
@@ -29,10 +29,10 @@ namespace Tools.Inventory.UI
 
         private void OnPageOpen()
         {
-            inventory.AddItemAddListener(OnItemAdded);
-            inventory.AddItemRemoveListener(OnItemRemoved);
-            inventory.AddRefreshSlotsListener(OnRefreshSlots);
-            inventory.AddItemReducedListener(OnItemReduced);
+            inventory.OnItemAdded.AddListener(OnItemAdded);
+            inventory.OnItemRemoved.AddListener(OnItemRemoved);
+            inventory.OnRefreshItems.AddListener(OnRefreshSlots);
+            inventory.OnItemReduced.AddListener(OnItemReduced);
             
             OnRefreshSlots(inventory.Items);
         }
@@ -40,10 +40,10 @@ namespace Tools.Inventory.UI
         private void OnPageClose()
         {
             ClearSlots();
-            inventory.RemoveItemAddListener(OnItemAdded);
-            inventory.RemoveItemRemoveListener(OnItemRemoved);
-            inventory.RemoveRefreshSlotsListener(OnRefreshSlots);
-            inventory.RemoveItemReducedListener(OnItemReduced);
+            inventory.OnItemAdded.RemoveListener(OnItemAdded);
+            inventory.OnItemRemoved.RemoveListener(OnItemRemoved);
+            inventory.OnRefreshItems.RemoveListener(OnRefreshSlots);
+            inventory.OnItemReduced.RemoveListener(OnItemReduced);
         }
 
         private void OnItemAdded(ItemEventArgs args)

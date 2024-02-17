@@ -8,15 +8,22 @@ namespace Tools.Inventory
     {
         public ItemData Data => _data;
         public int Quantity => _quantity;
+        [ShowInInspector]
+        public bool IsEmpty { get; private set; }
 
         [ShowInInspector, ReadOnly]        
         protected ItemData _data;
         [ShowInInspector, ReadOnly]
         protected int _quantity;
 
+        public InventoryItem()
+        {
+            IsEmpty = true;
+        }
+
         public InventoryItem(ItemData data)
         {
-            _data = data;
+            Fill(data);
         }
 
         public virtual int AddQuantity(int amount)
@@ -72,6 +79,19 @@ namespace Tools.Inventory
             }
 
             return false;
+        }
+    
+        public void Fill(ItemData data)
+        {
+            _data = data;
+            IsEmpty = false;
+        }
+
+        public void Clear()
+        {
+            _data = null;
+            _quantity = 0;
+            IsEmpty = true;
         }
     }
 }

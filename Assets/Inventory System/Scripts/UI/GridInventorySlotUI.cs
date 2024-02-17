@@ -67,5 +67,10 @@ namespace Tools.Inventory.UI
         {
             amountText.text = quantity > 1 ? $"{quantity}" : "";
         }
+
+        public void SetActive(bool condition)
+        {
+            gameObject.SetActive(condition);
+        }
     }
 }

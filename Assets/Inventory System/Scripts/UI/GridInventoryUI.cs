@@ -1,4 +1,5 @@
 using Core.UI;
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Tools.Inventory.UI
 {
     public class GridInventoryUI : MonoBehaviour
     {
-        [SerializeField]
+        [ShowInInspector, ReadOnly]
         private BaseInventory inventory;
 
         [Header("Item Information")]
@@ -31,30 +32,33 @@ namespace Tools.Inventory.UI
         [SerializeField]
         private Transform slotContainer;
         [SerializeField]
+        private GridInventorySlotUI slotPrefab;
+        [SerializeField]
         private List<GridInventorySlotUI> itemSlots = new();
+        [SerializeField]
+        private int initialSlotCapacity = 10;
 
-        private UIPage _uiPage;
         private GridInventorySlotUI _selectedSlot;
 
         private void Awake()
         {
-            _uiPage = GetComponent<UIPage>();
-
-            _uiPage.OnOpen.AddListener(OnPageOpen);
-            _uiPage.OnClose.AddListener(OnPageClose);
-
-            slotContainer.GetComponentsInChildren(itemSlots);
-            itemSlots.ForEach(x =>
+            for (int i = 0; i < initialSlotCapacity; i++)
             {
-                x.ClearSlot();
-                x.OnSelectSlot.AddListener(OnSelectedSlot);
-            });
+                var slot = CreateSlot();
+                slot.SetActive(false);
+                itemSlots.Add(slot);
+            }
 
             removeItemButton.onClick.AddListener(RemoveSelectedItem);
             reduceItemButton.onClick.AddListener(ReduceSelectedItem);
         }
 
-        private void OnPageOpen()
+        public void SetInventory(BaseInventory inventory)
+        {
+            this.inventory = inventory;
+        }
+
+        public void OpenInventory()
         {
             inventory.OnItemAdded.AddListener(OnItemAdded);
             inventory.OnItemRemoved.AddListener(OnItemRemoved);
@@ -65,7 +69,7 @@ namespace Tools.Inventory.UI
             ClearItemInformation();
         }
 
-        private void OnPageClose()
+        public void CloseInventory()
         {
             ClearSlots();
             ClearItemInformation();
@@ -181,6 +185,15 @@ namespace Tools.Inventory.UI
             }
 
             inventory.ReduceItem(_selectedSlot.Item, 1);
+        }
+    
+        private GridInventorySlotUI CreateSlot()
+        {
+            var slot = Instantiate(slotPrefab, slotContainer);
+            slot.ClearSlot();
+            slot.OnSelectSlot.AddListener(OnSelectedSlot);
+
+            return slot;
         }
     }
 }

@@ -11,6 +11,8 @@ namespace Tools.Inventory
     [CreateAssetMenu(fileName = "ItemDatabase", menuName = "Inventory/ItemDatabase")]
     public class ItemDatabase : ScriptableObject
     {
+        public List<ItemData> Items => items;
+
         [SerializeField, ReadOnly]
         private List<ItemData> items = new List<ItemData>();
 

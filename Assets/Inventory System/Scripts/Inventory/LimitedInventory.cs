@@ -10,7 +10,7 @@ namespace Tools.Inventory
     public class LimitedInventory : BaseInventory
     {
         public int MaxItems => _maxItems;
-        public bool IsMax => _items.Count == _maxItems;
+        public bool IsMax => HasEmptySlot() == false;
 
         [Title("Inventory Settings")]
         [PropertyOrder(-5)]
@@ -19,7 +19,12 @@ namespace Tools.Inventory
 
         private void Awake() 
         {
-            _items = Enumerable.Repeat<InventoryItem>(null, _maxItems).ToList();
+            _items = new();
+
+            for (int i = 0; i < _maxItems; i++)
+            {
+                _items.Add(new InventoryItem());
+            }
         }
 
         public override void AddItem(ItemData itemData, int amount)
@@ -116,7 +121,6 @@ namespace Tools.Inventory
         private int GetEmptySlot()
         {
             var slot = _items.FindIndex(item => item.IsEmpty);
-            Debug.Log(slot);
             return slot;
         }
     }

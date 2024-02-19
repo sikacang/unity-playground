@@ -16,8 +16,10 @@ MonoBehaviour:
   keepCompletedTasks: 1
   showCompletedTasks: 0
   items:
-  - task: Cari aset sederhana untuk karakter dan toko
+  - task: Create interaction system untuk interaksi ke shelf lebih baik
     isComplete: 0
+  - task: Cari aset sederhana untuk karakter dan toko
+    isComplete: 1
   - task: Sorting inventory berdasarkan item
     isComplete: 0
   - task: Daftar barang untuk tampilin diluar shelf

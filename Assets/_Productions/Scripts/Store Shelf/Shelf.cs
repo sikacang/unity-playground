@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using Core;
+using Tools.Interaction;
 using Tools.Inventory;
 using UnityEngine;
 
@@ -9,17 +9,24 @@ namespace Waroeng
     public class Shelf : MonoBehaviour
     {
         public LimitedInventory Inventory => _inventory;
-
+        
         private LimitedInventory _inventory;
+        private ShelfManager _shelfManager;
 
         private void Awake()
         {
             _inventory = GetComponent<LimitedInventory>();
+            _shelfManager = SceneServiceProvider.GetService<ShelfManager>();
         }
 
-        public void AddItem(ItemData data, int amount)
+        public void OpenShelf(Interactor interactor)
         {
-            _inventory.AddItem(data, amount);
-        }
+            var interactorsInventory = interactor.GetComponent<LimitedInventory>();
+
+            if (interactorsInventory == null)
+                return;
+            
+            _shelfManager.OpenShelf(this, interactorsInventory);
+        }     
     }
 }

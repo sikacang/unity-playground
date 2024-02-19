@@ -9,26 +9,26 @@ namespace Waroeng
     public class ShelfManager : SceneService
     {
         [ShowInInspector, ReadOnly]
-        private LimitedInventory _firstInventory;
+        private LimitedInventory _playerInventory;
         [ShowInInspector, ReadOnly]
-        private LimitedInventory _secondInventory;
+        private LimitedInventory _shelfInventory;
 
         public UnityEvent<LimitedInventory, LimitedInventory> OnOpenShelf = new();
         public UnityEvent OnCloseShelf = new();
         
         [Button]
-        public void OpenShelf(LimitedInventory firstInventory, LimitedInventory secondInventory)
+        public void OpenShelf(Shelf shelf, LimitedInventory playerInventory)
         {
-            _firstInventory = firstInventory;
-            _secondInventory = secondInventory;
+            _shelfInventory = shelf.Inventory;
+            _playerInventory = playerInventory;
 
-            OnOpenShelf.Invoke(_firstInventory, _secondInventory);
+            OnOpenShelf.Invoke(_playerInventory, _shelfInventory);
         }
 
         public void CloseShelf()
         {
-            _firstInventory = null;
-            _secondInventory = null;
+            _playerInventory = null;
+            _shelfInventory = null;
 
             OnCloseShelf?.Invoke();
         }

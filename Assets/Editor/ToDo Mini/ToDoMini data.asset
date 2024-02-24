@@ -16,9 +16,21 @@ MonoBehaviour:
   keepCompletedTasks: 1
   showCompletedTasks: 0
   items:
-  - task: Create interaction system untuk interaksi ke shelf lebih baik
+  - task: Customer View
     isComplete: 0
+  - task: Can deliver order
+    isComplete: 1
+  - task: Order Data
+    isComplete: 1
+  - task: Create interaction system untuk interaksi ke shelf lebih baik
+    isComplete: 1
   - task: Cari aset sederhana untuk karakter dan toko
+    isComplete: 1
+  - task: Can receive order
+    isComplete: 0
+  - task: Can make modular order
+    isComplete: 0
+  - task: Can View order with UI
     isComplete: 1
   - task: Sorting inventory berdasarkan item
     isComplete: 0

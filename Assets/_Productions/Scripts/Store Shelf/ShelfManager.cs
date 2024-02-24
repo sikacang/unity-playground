@@ -35,7 +35,7 @@ namespace Waroeng
 
         public bool TryTransferItems(LimitedInventory sourceInventory, LimitedInventory targetInventory, InventoryItem item)
         {
-            if (targetInventory.IsMax)
+            if (targetInventory.IsMax && targetInventory.CanAddItem(item) == false)
                 return false;
 
             targetInventory.AddItem(item.Data, 1);

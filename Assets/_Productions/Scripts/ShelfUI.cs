@@ -60,16 +60,6 @@ namespace Waroeng
             OpenInventory();
         }
 
-        public void OpenInventory()
-        {
-            _inventory.OnItemAdded.AddListener(OnItemAdded);
-            _inventory.OnItemRemoved.AddListener(OnItemRemoved);
-            _inventory.OnRefreshItems.AddListener(OnRefreshSlots);
-            _inventory.OnItemReduced.AddListener(OnItemReduced);
-
-            OnRefreshSlots(_inventory.Items);
-        }
-
         public void CloseInventory()
         {
             ClearSlots();
@@ -78,6 +68,16 @@ namespace Waroeng
             _inventory.OnItemRemoved.RemoveListener(OnItemRemoved);
             _inventory.OnRefreshItems.RemoveListener(OnRefreshSlots);
             _inventory.OnItemReduced.RemoveListener(OnItemReduced);
+        }
+
+        private void OpenInventory()
+        {
+            _inventory.OnItemAdded.AddListener(OnItemAdded);
+            _inventory.OnItemRemoved.AddListener(OnItemRemoved);
+            _inventory.OnRefreshItems.AddListener(OnRefreshSlots);
+            _inventory.OnItemReduced.AddListener(OnItemReduced);
+
+            OnRefreshSlots(_inventory.Items);
         }
 
         private void OnItemAdded(ItemEventArgs args)

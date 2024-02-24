@@ -33,10 +33,12 @@ namespace Tools.Inventory
             {
                 if (itemInstance.CanAddQuantity())
                 {
+                    Debug.Log("Can Add");
                     amount = itemInstance.AddQuantity(amount);
                     OnItemAdded?.Invoke(new ItemEventArgs(itemInstance, _items.IndexOf(itemInstance)));
                 }
 
+                Debug.Log("Has Item");
                 StartCoroutine(AddItemCoroutine(itemData, amount));
             }
             else
@@ -84,6 +86,17 @@ namespace Tools.Inventory
 
             var removedItem = _items[index];
             RemoveItem(removedItem);
+        }
+
+        public bool CanAddItem(InventoryItem item)
+        {
+            var items = _items.Where(i => i.Data == item.Data);
+            bool isFull = IsMax;
+
+            foreach (var i in items)
+                isFull &= i.CanAddQuantity() == false;
+
+            return isFull == false;
         }
 
         // Private method

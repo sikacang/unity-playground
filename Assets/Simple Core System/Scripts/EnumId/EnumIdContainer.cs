@@ -24,7 +24,7 @@ namespace Core
         public void AddNewEnum()
         {
             var newEnum = ScriptableObject.CreateInstance<EnumId>();
-            newEnum.name = $"New Enum {_enumIds.Count + 1}";
+            newEnum.Name = $"New Enum {_enumIds.Count + 1}";
             _enumIds.Add(newEnum);
 
             AssetDatabase.AddObjectToAsset(newEnum, this);

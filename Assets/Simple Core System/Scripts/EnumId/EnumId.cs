@@ -10,13 +10,24 @@ namespace Core
     [CreateAssetMenu(menuName = "Enum Id/New ID")]
     public class EnumId : ScriptableObject
     {
+        public string Name {
+            get { return enumName; }
+            set { 
+                enumName = value; 
+                this.name = value; 
+            }
+        }
+
+        [SerializeField]
+        private string enumName;
+
 #if UNITY_EDITOR
 
         [Button("Rename Enum Id", ButtonSizes.Medium)]
         [ContextMenu("Rename Enum Id")]
-        public void Rename(string name)
+        public void Rename()
         {
-            this.name = name;
+            Name = enumName;
             AssetDatabase.SaveAssets();
             EditorUtility.SetDirty(this);
         }

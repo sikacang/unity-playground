@@ -99,6 +99,14 @@ namespace Core.UI
             SetPageVisibility(false);
         }
 
+        public void OpenPage()
+        {
+            if (PageID == null)
+                return;
+            
+            OpenPage(PageID);
+        }
+
         public void OpenPage(EnumId pageId)
         {
             SceneUI.PushPage(pageId);

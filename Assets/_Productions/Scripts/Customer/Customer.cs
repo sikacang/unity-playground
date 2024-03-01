@@ -13,39 +13,54 @@ namespace Waroeng
 {
     public class Customer : MonoBehaviour
     {
-        public Order Order => customerOrder;
+        public Order Order => _customerOrder;
 
-        [SerializeField]
-        private Order customerOrder;
+        [ShowInInspector,ReadOnly]
+        private Order _customerOrder;
 
-        [SerializeField]
+        [SerializeField,ReadOnly]
         [InfoBox("Order Page ID")]
         private EnumId orderPageId;
 
         [Header("Customer Component")]
-        [SerializeField]
+        [SerializeField,ReadOnly]
         private BoxCollider2D boxCollider;
 
         public UnityEvent<Order> OnOrderModified = new();
         public UnityEvent OnOrderCompleted = new();
 
+        [Header("Debug")]
+        [SerializeField]
+        private Order debugOrder;
+
+        private void Start()
+        {
+            SetOrder(debugOrder);
+        }
+
+        public void SetOrder(Order order)
+        {
+            _customerOrder = order;
+            OnOrderModified.Invoke(_customerOrder);
+        }
+
         public bool CanDeliverItem(InventoryItem item, out int orderAmount)
         {
-            var orderItem = customerOrder.Items.Find(x => x.Item == item.Data);
+            var orderItem = _customerOrder.Items.Find(x => x.Item == item.Data);
             orderAmount = orderItem != null ? orderItem.Quantity : 0;
-            return customerOrder.Items.Any(x => x.Item == item.Data && x.Quantity > 0);        
+            return _customerOrder.Items.Any(x => x.Item == item.Data && x.Quantity > 0);        
         }
 
         public void DeliverItem(ItemData data, int quantity)
         {
-            var orderItem = customerOrder.Items.Find(x => x.Item == data);
+            var orderItem = _customerOrder.Items.Find(x => x.Item == data);
             if (orderItem != null)
             {
                 orderItem.Quantity -= quantity;
-                OnOrderModified.Invoke(customerOrder);
+                OnOrderModified.Invoke(_customerOrder);
             }
 
-            if (customerOrder.Items.All(x => x.Quantity == 0))
+            if (_customerOrder.Items.All(x => x.Quantity == 0))
             {
                 CompleteOrder();
             }

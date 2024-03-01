@@ -2607,15 +2607,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b9dc5d2682e8f246baaeebe60efa6c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customerOrder:
-    Items:
-    - Item: {fileID: -2654182023772328919, guid: bfe7f13553d53d442b4ef1bb07696861, type: 2}
-      Quantity: 3
-    - Item: {fileID: 4868487589941987398, guid: bfe7f13553d53d442b4ef1bb07696861, type: 2}
-      Quantity: 2
-    - Item: {fileID: -2492756069591946804, guid: bfe7f13553d53d442b4ef1bb07696861, type: 2}
-      Quantity: 1
-    Time: 0
   orderPageId: {fileID: 11400000, guid: e52a237c3c9b5d442bac19047195a5f8, type: 2}
   boxCollider: {fileID: 896963363}
   OnOrderModified:
@@ -2660,6 +2651,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  debugOrder:
+    Items:
+    - Item: {fileID: -2492756069591946804, guid: bfe7f13553d53d442b4ef1bb07696861, type: 2}
+      Quantity: 3
+    - Item: {fileID: -2654182023772328919, guid: bfe7f13553d53d442b4ef1bb07696861, type: 2}
+      Quantity: 2
+    - Item: {fileID: 4868487589941987398, guid: bfe7f13553d53d442b4ef1bb07696861, type: 2}
+      Quantity: 5
+    Time: 0
 --- !u!114 &896963365
 MonoBehaviour:
   m_ObjectHideFlags: 0

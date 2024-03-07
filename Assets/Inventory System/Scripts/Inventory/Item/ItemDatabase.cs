@@ -13,23 +13,22 @@ namespace Tools.Inventory
     {
         public List<ItemData> Items => items;
 
-        [SerializeField, ReadOnly]
+        [SerializeField]
+        [ListDrawerSettings(ShowIndexLabels = true, CustomAddFunction = nameof(AddNewItem), 
+            CustomRemoveElementFunction = nameof(RemoveItem), NumberOfItemsPerPage = 10)]
         private List<ItemData> items = new List<ItemData>();
 
         public ItemData GetItemData(string itemId)
         {
-            return items.Find(item => item.ID == itemId);
+            return items.Find(item => item.Id == itemId);
         }
 
 #if UNITY_EDITOR
-        [FoldoutGroup("Editor")]
-        [Button("Add New Item")]
-        public void AddNewItem(string itemName) 
+        private void AddNewItem() 
         {
             ItemData newItem = CreateInstance<ItemData>();
-            newItem.name = $"{items.Count}_{itemName}";
-            newItem.Name = itemName;
-            newItem.SetDatabase(this);
+            newItem.name = $"{items.Count}_new item";
+            newItem.GenerateId();
 
             items.Add(newItem);
             
@@ -39,8 +38,8 @@ namespace Tools.Inventory
             EditorUtility.SetDirty(this);
         }
 
-        [FoldoutGroup("Editor")]
-        [Button("Clear Items")]
+        [Button("Clear Items", ButtonSizes.Medium)]
+        [PropertyOrder(-1)]
         public void ClearItem()
         {
             for (int i = 0; i < items.Count; i++)
@@ -53,13 +52,12 @@ namespace Tools.Inventory
             AssetDatabase.SaveAssets();
         }
 
-        [FoldoutGroup("Editor")]
-        [Button("Remove Item")]
-        public void RemoveItem(ItemData removedItems)
+        private void RemoveItem(ItemData removedItems)
         {
             items.Remove(removedItems);
             Undo.DestroyObjectImmediate(removedItems);
             AssetDatabase.SaveAssets();
+            EditorUtility.SetDirty(this);
         }
 #endif
     }

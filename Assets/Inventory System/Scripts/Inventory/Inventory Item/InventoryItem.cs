@@ -28,7 +28,7 @@ namespace Tools.Inventory
 
         public virtual int AddQuantity(int amount)
         {
-            switch (_data.ItemSlotType)
+            /*switch (_data.ItemSlotType)
             {
                 case ItemSlotType.Stack:
                     if (_quantity + amount > Data.MaxStack)
@@ -46,7 +46,7 @@ namespace Tools.Inventory
                 case ItemSlotType.Single:
                     _quantity = 1;
                     return amount - 1;
-            }
+            }*/
 
             return 0;
         }
@@ -70,15 +70,7 @@ namespace Tools.Inventory
     
         public bool CanAddQuantity()
         {
-            switch (_data.ItemSlotType)
-            {
-                case ItemSlotType.Stack:
-                    return _quantity < Data.MaxStack;
-                case ItemSlotType.Single:
-                    return _quantity < 1;
-            }
-
-            return false;
+            return _quantity < Data.MaxStack;
         }
     
         public void Fill(ItemData data)

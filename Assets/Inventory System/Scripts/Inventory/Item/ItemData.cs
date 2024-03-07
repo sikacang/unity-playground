@@ -7,48 +7,43 @@ using UnityEditor;
 
 namespace Tools.Inventory
 {
-    [CreateAssetMenu(menuName = "Inventory/ItemData")]
     public class ItemData : ScriptableObject
     {
-        public string ID { get; private set; }
+        [ShowInInspector, ReadOnly, PropertyOrder(-5)]
+        [HorizontalGroup("ItemSplit", 0.75f), LabelWidth(75), VerticalGroup("ItemSplit/Left")]
+        public string Id { get; private set; }
 
+        [HorizontalGroup("ItemSplit", 0.75f), LabelWidth(75), VerticalGroup("ItemSplit/Left")]
+        [OnValueChanged(nameof(RenameFileData))]        
         public string Name;
+
+        [HorizontalGroup("ItemSplit", 0.75f), LabelWidth(75), VerticalGroup("ItemSplit/Left")]
+        public int MaxStack = 1;
+
+        [HorizontalGroup("ItemSplit", 0.75f), VerticalGroup("ItemSplit/Left")]
+        [TextArea, HideLabel]
         public string Description;
 
-        [PreviewField(50, ObjectFieldAlignment.Left)]
+        [HorizontalGroup("ItemSplit"), VerticalGroup("ItemSplit/Right")]
+        [PreviewField(100), HideLabel]
         public Sprite Icon;
 
-        [Title("Amount Settings")]
-        public ItemSlotType ItemSlotType;
-        [ShowIf("ItemSlotType", ItemSlotType.Stack)]
-        public int MaxStack = 99;
-
-
-        private ItemDatabase _itemDatabase;
-
-        public void SetDatabase(ItemDatabase database)
-        {
-            _itemDatabase = database;
-        }
-
-        public void SetID(string id)
-        {
-            ID = id;
-        }
-
 #if UNITY_EDITOR
-        [FoldoutGroup("Editor")]
-        [ButtonGroup("Editor/Remove Item")]
-        public void RemoveItem()
+        [HorizontalGroup("ItemSplit"), VerticalGroup("ItemSplit/Left")]
+        [Button("Generate ID")]
+        public void GenerateId()
         {
-            _itemDatabase.RemoveItem(this);
+            System.Random rnd = new System.Random();
+            int myRandomNo = rnd.Next(1000, 9999);
+            Id = $"{RandomStringGenerator.GenerateRandomString(4)}-{myRandomNo}";
+        }
+
+        private void RenameFileData()
+        {
+            this.name = Name;
+            AssetDatabase.SaveAssets();
+            EditorUtility.SetDirty(this);
         }
 #endif
-    }
-
-    public enum ItemSlotType
-    {
-        Stack = 0,
-        Single = 1,
     }
 }

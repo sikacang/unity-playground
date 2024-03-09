@@ -11,7 +11,7 @@ namespace Tools.Inventory.UI
 {
     public class GridInventorySlotUI : MonoBehaviour
     {
-        public InventoryItem Item => _item;
+        public Item Item => _item;
 
         [Header("Slot Properties")]
         [SerializeField]
@@ -27,7 +27,7 @@ namespace Tools.Inventory.UI
         // Events
         public UnityEvent<GridInventorySlotUI> OnSelectSlot;
 
-        private InventoryItem _item;
+        private Item _item;
 
         private void Awake()
         {
@@ -37,7 +37,7 @@ namespace Tools.Inventory.UI
             });
         }
 
-        public void SetSlot(InventoryItem item)
+        public void SetSlot(Item item)
         {
             if (item.IsEmpty)
             {

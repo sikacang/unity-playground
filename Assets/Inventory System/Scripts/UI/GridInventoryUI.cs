@@ -98,7 +98,7 @@ namespace Tools.Inventory.UI
             itemSlots[args.Index].ClearSlot();
         }
 
-        private void OnRefreshSlots(List<InventoryItem> list)
+        private void OnRefreshSlots(List<Item> list)
         {
             ClearSlots();
 
@@ -120,7 +120,7 @@ namespace Tools.Inventory.UI
             slot.SetItemAmount(args.Item.Quantity);
         }
 
-        private void SetupSlot(int index, InventoryItem item)
+        private void SetupSlot(int index, Item item)
         {
             if (index < itemSlots.Count)
             {

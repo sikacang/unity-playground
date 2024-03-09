@@ -17,24 +17,14 @@ namespace Tools.Inventory
         [SerializeField]
         private int _maxItems = 10;
 
-        private void Awake() 
-        {
-            _items = new();
-
-            for (int i = 0; i < _maxItems; i++)
-            {
-                _items.Add(new InventoryItem());
-            }
-        }
-
         public override void AddItem(ItemData itemData, int amount)
         {
-            if (HasItem(out InventoryItem itemInstance, itemData))
+            if (HasItem(out Item itemInstance, itemData))
             {
                 if (itemInstance.CanAddQuantity())
                 {
                     Debug.Log("Can Add");
-                    amount = itemInstance.AddQuantity(amount);
+                    amount = itemInstance.TryAddQuantity(amount);
                     OnItemAdded?.Invoke(new ItemEventArgs(itemInstance, _items.IndexOf(itemInstance)));
                 }
 
@@ -51,11 +41,11 @@ namespace Tools.Inventory
             }
         }
 
-        public override void ReduceItem(InventoryItem item, int amount)
+        public override void ReduceItem(Item item, int amount)
         {
             if (_items.Contains(item))
             {
-                bool isEmpty = item.ReduceQuantity(amount);
+                bool isEmpty = item.TryReduceQuantity(amount);
                 Debug.Log($"Item {item.Data.name} reduced by {amount} in inventory");
 
                 if (isEmpty)
@@ -69,7 +59,7 @@ namespace Tools.Inventory
             }
         }
 
-        public override void RemoveItem(InventoryItem item)
+        public override void RemoveItem(Item item)
         {
             if(_items.Contains(item) == false)
                 return;
@@ -88,7 +78,7 @@ namespace Tools.Inventory
             RemoveItem(removedItem);
         }
 
-        public bool CanAddItem(InventoryItem item)
+        public bool CanAddItem(Item item)
         {
             var items = _items.Where(i => i.Data == item.Data);
             bool isFull = IsMax;
@@ -117,7 +107,7 @@ namespace Tools.Inventory
 
                     var itemInstance = _items[emptySlot];
                     itemInstance.Fill(itemData);
-                    amount = itemInstance.AddQuantity(amount);
+                    amount = itemInstance.TryAddQuantity(amount);
                     OnItemAdded?.Invoke(new ItemEventArgs(itemInstance, _items.IndexOf(itemInstance)));
                 }
 

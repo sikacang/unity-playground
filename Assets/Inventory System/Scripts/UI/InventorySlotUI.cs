@@ -9,7 +9,7 @@ namespace Tools.Inventory.UI
 {
     public class InventorySlotUI : MonoBehaviour
     {
-        public InventoryItem Item => _item;
+        public Item Item => _item;
 
         [SerializeField]
         private TextMeshProUGUI itemNameText;
@@ -20,7 +20,7 @@ namespace Tools.Inventory.UI
         [SerializeField]
         private Button reduceItemButton;
 
-        private InventoryItem _item;
+        private Item _item;
         private Action<InventorySlotUI> _onRemoveItem;
         private Action<InventorySlotUI, int> _onReduceItem;
 
@@ -30,7 +30,7 @@ namespace Tools.Inventory.UI
             reduceItemButton.onClick.AddListener(OnReduceItem);
         }
 
-        public void SetSlot(InventoryItem item)
+        public void SetSlot(Item item)
         {
             _item = item;
             SetItemName(item.Data.Name);

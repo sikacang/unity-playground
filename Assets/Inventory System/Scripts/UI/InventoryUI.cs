@@ -65,7 +65,7 @@ namespace Tools.Inventory.UI
             OnRefreshSlots(inventory.Items);
         }
 
-        private void OnRefreshSlots(List<InventoryItem> list)
+        private void OnRefreshSlots(List<Item> list)
         {
             ClearSlots();
 
@@ -101,7 +101,7 @@ namespace Tools.Inventory.UI
             inventory.RemoveItem(slot.Item);
         }
 
-        private void SpawnItemSlot(int index, InventoryItem item)
+        private void SpawnItemSlot(int index, Item item)
         {
             if (index < _itemSlots.Count)
             {

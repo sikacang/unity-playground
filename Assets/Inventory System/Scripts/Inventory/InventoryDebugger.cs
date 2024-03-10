@@ -4,24 +4,17 @@ using Sirenix.OdinInspector;
 
 public class InventoryDebugger : MonoBehaviour
 {
-    [SerializeField]
-    private BaseInventory inventory;
+    private BaseInventoryModel inventory;
+
+    private void Start()
+    {
+        var inventory = GetComponent<InventoryController>();
+        this.inventory = inventory.inventory;
+    }
 
     [Button("Add Item")]
     private void AddItem(ItemData data, int amount)
     {
         inventory.AddItem(data, amount);
-    }
-
-    [Button("Remove Item by Index")]
-    private void RemoveItem(int index)
-    {
-        inventory.RemoveItem(index);   
-    }
-
-    [Button("Reduce Item")]
-    private void ReduceItem(ItemData data, int amount)
-    {
-        
     }
 }

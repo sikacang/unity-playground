@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Tools.Inventory
 {
-    public class LimitedInventory : BaseInventory
+    public class LimitedInventory : BaseInventoryModel
     {
         public int MaxItems => _maxItems;
         public bool IsMax => HasEmptySlot() == false;
@@ -17,27 +17,28 @@ namespace Tools.Inventory
         [SerializeField]
         private int _maxItems = 10;
 
+        public LimitedInventory(ItemData[] initials) : base(initials)
+        {
+        }
+
         public override void AddItem(ItemData itemData, int amount)
         {
             if (HasItem(out Item itemInstance, itemData))
             {
                 if (itemInstance.CanAddQuantity())
                 {
-                    Debug.Log("Can Add");
-                    amount = itemInstance.TryAddQuantity(amount);
+                    amount = itemInstance.AddQuantity(amount);
                     OnItemAdded?.Invoke(new ItemEventArgs(itemInstance, _items.IndexOf(itemInstance)));
                 }
 
-                Debug.Log("Has Item");
-                StartCoroutine(AddItemCoroutine(itemData, amount));
+                AddItemCoroutine(itemData, amount);
             }
             else
             {
                 if(HasEmptySlot() == false)
                     return;
 
-                Debug.Log("Adding new item");
-                StartCoroutine(AddItemCoroutine(itemData, amount));
+                AddItemCoroutine(itemData, amount);
             }
         }
 
@@ -45,17 +46,12 @@ namespace Tools.Inventory
         {
             if (_items.Contains(item))
             {
-                bool isEmpty = item.TryReduceQuantity(amount);
-                Debug.Log($"Item {item.Data.name} reduced by {amount} in inventory");
+                bool isEmpty = item.ReduceQuantity(amount);
 
                 if (isEmpty)
                     RemoveItem(item);
                 else
                     OnItemReduced?.Invoke(new ItemEventArgs(item, _items.IndexOf(item)));
-            }
-            else
-            {
-                Debug.Log($"Item {item.Data.name} not found in inventory");
             }
         }
 
@@ -64,7 +60,8 @@ namespace Tools.Inventory
             if(_items.Contains(item) == false)
                 return;
 
-            item.Clear();
+            int index = _items.IndexOf(item);
+            _items[index] = null;
 
             BlastRemoveEvent(item, _items.IndexOf(item));
         }
@@ -90,7 +87,7 @@ namespace Tools.Inventory
         }
 
         // Private method
-        private IEnumerator AddItemCoroutine(ItemData itemData, int amount)
+        private void AddItemCoroutine(ItemData itemData, int amount)
         {
             int tryAmount = amount;
             while (amount > 0 && tryAmount > 0)
@@ -105,26 +102,23 @@ namespace Tools.Inventory
                     if(emptySlot < 0 || emptySlot >= _items.Count)
                         break;
 
-                    var itemInstance = _items[emptySlot];
-                    itemInstance.Fill(itemData);
-                    amount = itemInstance.TryAddQuantity(amount);
-                    OnItemAdded?.Invoke(new ItemEventArgs(itemInstance, _items.IndexOf(itemInstance)));
+                    var item = _items[emptySlot];
+                    amount = item.AddQuantity(amount);
+                    OnItemAdded?.Invoke(new ItemEventArgs(item, _items.IndexOf(item)));
                 }
 
-                yield return null;
                 tryAmount--;
             }
         }
 
         private bool HasEmptySlot()
-        {            
-            return _items.Any(item => item.IsEmpty);
+        {
+            return false;
         }
 
         private int GetEmptySlot()
         {
-            var slot = _items.FindIndex(item => item.IsEmpty);
-            return slot;
+            return 0;
         }
     }
 }

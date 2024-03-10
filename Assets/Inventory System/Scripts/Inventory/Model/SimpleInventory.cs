@@ -1,35 +1,38 @@
-using UnityEngine;
-using System.Collections;
+using System;
 
 namespace Tools.Inventory
 {
-    public class SimpleInventory : BaseInventory
+    [Serializable]
+    public class SimpleInventory : BaseInventoryModel
     {
+        public SimpleInventory(ItemData[] initials) : base(initials)
+        {
+        }
+
         // Public method
         public override void AddItem(ItemData itemData, int amount)
         {
             if(HasItem(out Item item, itemData))
             {
-                AddItemCoroutine(item, itemData, amount);
+                AddItemProcess(item, itemData, amount);
             }
             else
             {
                 item = new Item(itemData, 0);
                 _items.Add(item);
-                AddItemCoroutine(item, itemData, amount);
+                AddItemProcess(item, itemData, amount);
             }
         }
 
         public override void RemoveItem(Item item)
         {
-            if (_items.Contains(item))
-            {
-                int index = _items.IndexOf(item);
-                
-                _items.Remove(item);
-                
-                BlastRemoveEvent(item, index);
-            }
+            if (_items.Contains(item) == false)
+                return;
+
+            int index = _items.IndexOf(item);
+            _items.Remove(item);
+
+            BlastRemoveEvent(item, index);
         }
 
         public override void RemoveItem(int index)
@@ -47,7 +50,7 @@ namespace Tools.Inventory
         {
             if (_items.Contains(item))
             {
-                bool isEmpty = item.TryReduceQuantity(amount);
+                bool isEmpty = item.ReduceQuantity(amount);
                 
                 if (isEmpty)
                     RemoveItem(item);
@@ -57,27 +60,34 @@ namespace Tools.Inventory
         }
 
         // Private method
-        private void AddItemCoroutine(Item itemInstance, ItemData itemData, int amount)
+        private void AddItemProcess(Item item, ItemData itemData, int amount)
         {
             int tryAmount = amount;
+            int addCount = 0;
+
             while (amount > 0 && tryAmount > 0)
             {
-                if (itemInstance.CanAddQuantity())
+                if (item.CanAddQuantity())
                 {
-                    amount = itemInstance.TryAddQuantity(amount);
-                    OnItemAdded?.Invoke(new ItemEventArgs(itemInstance, _items.IndexOf(itemInstance)));
+                    amount = item.AddQuantity(amount);
+                    addCount++;
                 }
 
                 if (amount > 0)
                 {
-                    itemInstance = new Item(itemData, 0);
-                    amount = itemInstance.TryAddQuantity(amount);
-                    _items.Add(itemInstance);
-                    OnItemAdded?.Invoke(new ItemEventArgs(itemInstance, _items.IndexOf(itemInstance)));
+                    item = new Item(itemData, 0);
+                    amount = item.AddQuantity(amount);
+                    _items.Add(item);
+                    addCount++;
                 }
 
                 tryAmount--;
-            }            
+            }         
+            
+            if(addCount > 1)
+                OnRefreshItems?.Invoke(_items);
+            else
+                OnItemAdded?.Invoke(new ItemEventArgs(item, _items.IndexOf(item)));
         }               
     }    
 }

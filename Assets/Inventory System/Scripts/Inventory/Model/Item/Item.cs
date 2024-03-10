@@ -17,11 +17,6 @@ namespace Tools.Inventory
         [ShowInInspector]
         public ItemData Data { get;private set; }
 
-        [ShowInInspector]
-        public bool IsEmpty { get; private set; }       
-
-        public int Index { get; set; }
-
         public Item(ItemData data, int quantity)
         {
             Id = $"{RandomStringGenerator.GenerateRandomString(5)}";
@@ -30,12 +25,11 @@ namespace Tools.Inventory
             Quantity = quantity;
         }
 
-        public int TryAddQuantity(int amount)
+        public int AddQuantity(int amount)
         {
-            int leftOver = Quantity + amount - Data.MaxStack;
-
             if(Quantity + amount > Data.MaxStack)
             {
+                int leftOver = Quantity + amount - Data.MaxStack;
                 Quantity = Data.MaxStack;
                 return leftOver;
             }
@@ -46,7 +40,7 @@ namespace Tools.Inventory
             }
         }
 
-        public bool TryReduceQuantity(int amount)
+        public bool ReduceQuantity(int amount)
         {
             Quantity -= amount;
 
@@ -57,11 +51,6 @@ namespace Tools.Inventory
             }
 
             return false;
-        }
-
-        public bool IsSameItem(string dataId)
-        {
-            return DataId.Equals(dataId);
         }
     
         public bool CanAddQuantity()

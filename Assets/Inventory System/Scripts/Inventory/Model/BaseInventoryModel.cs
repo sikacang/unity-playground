@@ -1,4 +1,5 @@
 using Sirenix.OdinInspector;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -6,25 +7,27 @@ using UnityEngine.Events;
 
 namespace Tools.Inventory
 {
-    public abstract class BaseInventory : MonoBehaviour
+    [Serializable]
+    public abstract class BaseInventoryModel
     {
         public List<Item> Items => _items;
 
-        [Title("List of Items")]
-        [SerializeField]
-        [ListDrawerSettings(IsReadOnly = true, HideAddButton = true, ShowItemCount = true)]
+        [ShowInInspector]
         protected List<Item> _items = new();
 
         // Events
-        [PropertySpace(5, 5)]
-        [FoldoutGroup("Events")]
-        public UnityEvent<ItemEventArgs> OnItemAdded = new();
-        [FoldoutGroup("Events")]
-        public UnityEvent<ItemEventArgs> OnItemRemoved = new();
-        [FoldoutGroup("Events")]
-        public UnityEvent<ItemEventArgs> OnItemReduced = new();
-        [FoldoutGroup("Events")]
-        public UnityEvent<List<Item>> OnRefreshItems = new();
+        public Action<ItemEventArgs> OnItemAdded;
+        public Action<ItemEventArgs> OnItemRemoved;
+        public Action<ItemEventArgs> OnItemReduced;
+        public Action<List<Item>> OnRefreshItems;
+
+        public BaseInventoryModel(ItemData[] initials)
+        {
+            for (int i = 0; i < initials.Length; i++)
+            {
+                _items.Add(new Item(initials[i], 1));
+            }
+        }
 
         // Abstract Methods
         public abstract void AddItem(ItemData itemData, int amount);
@@ -37,16 +40,16 @@ namespace Tools.Inventory
         {
             _items.Clear();
 
-            OnItemAdded.RemoveAllListeners();
-            OnItemRemoved.RemoveAllListeners();
-            OnItemReduced.RemoveAllListeners();
-            OnRefreshItems.RemoveAllListeners();
+            OnItemAdded = null;
+            OnItemRemoved = null;
+            OnItemReduced = null;
+            OnRefreshItems = null;
         }
 
         protected bool HasItem(out Item item, ItemData itemData)
         {
-            item = _items.Where(name => name.IsSameItem(itemData.Id))
-                .OrderByDescending(name => name.Quantity)
+            item = _items.Where(i => i.DataId == itemData.Id)
+                .OrderByDescending(j => j.Quantity)
                 .LastOrDefault();
 
             return item != null;

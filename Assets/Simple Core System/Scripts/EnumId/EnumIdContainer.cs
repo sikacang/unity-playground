@@ -14,17 +14,14 @@ namespace Core
     {
         [SerializeField]
         [PropertyOrder(0)]
-        [ListDrawerSettings(ShowIndexLabels = true, CustomRemoveElementFunction = nameof(RemoveEnumId), NumberOfItemsPerPage = 10)]
+        [ListDrawerSettings(ShowIndexLabels = true, CustomAddFunction = nameof(AddNewEnum), CustomRemoveElementFunction = nameof(RemoveEnumId), NumberOfItemsPerPage = 10)]
         private List<EnumId> _enumIds = new();
 
 #if UNITY_EDITOR
-
-        [Button("Add New", ButtonSizes.Medium)]
-        [PropertyOrder(-1)]
         public void AddNewEnum()
         {
-            var newEnum = ScriptableObject.CreateInstance<EnumId>();
-            newEnum.Name = $"New Enum {_enumIds.Count + 1}";
+            var newEnum = CreateInstance<EnumId>();
+            newEnum.name = $"New Enum {_enumIds.Count + 1}";
             _enumIds.Add(newEnum);
 
             AssetDatabase.AddObjectToAsset(newEnum, this);

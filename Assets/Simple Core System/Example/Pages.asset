@@ -27,6 +27,19 @@ MonoBehaviour:
   _enumIds:
   - {fileID: 7321941702554361782}
   - {fileID: -4902076378222173622}
+  - {fileID: 2188512378444595233}
+--- !u!114 &2188512378444595233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afb37c247c9aed0478740c3f3996a016, type: 3}
+  m_Name: Crafting Page
+  m_EditorClassIdentifier: 
 --- !u!114 &7321941702554361782
 MonoBehaviour:
   m_ObjectHideFlags: 0

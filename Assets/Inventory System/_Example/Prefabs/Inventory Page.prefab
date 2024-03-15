@@ -2616,6 +2616,9 @@ MonoBehaviour:
   OnReduced:
     m_PersistentCalls:
       m_Calls: []
+  OnRemoved:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &4181100274212701691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2630,7 +2633,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pageId: {fileID: 7321941702554361782, guid: 354b342cd6c0e364bb8d193766bde7b5, type: 2}
   disablePreviousPage: 0
-  offType: 1
+  offType: 0
   OnPushed:
     m_PersistentCalls:
       m_Calls: []

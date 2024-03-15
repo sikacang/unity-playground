@@ -4,12 +4,12 @@ using UnityEngine.UI;
 
 namespace Core.UI
 {
+    [RequireComponent(typeof(Canvas)), RequireComponent(typeof(GraphicRaycaster))]
     public class UIPage : MonoBehaviour
     {
         public enum ClosePageType
         {
             CanvasGraphic = 0,
-            GameObject = 1,
         }
 
         public EnumId PageID => pageId;
@@ -140,14 +140,6 @@ namespace Core.UI
                 {
                     _canvas.enabled = condition;
                 }
-                else
-                {
-                    gameObject.SetActive(condition);
-                }
-            }
-            else if (offType == ClosePageType.GameObject)
-            {
-                gameObject.SetActive(condition);
             }
 
             SetRaycast(condition);

@@ -35,7 +35,7 @@ namespace Tools.Inventory
         public abstract void RemoveItem(int index);
         public abstract void ReduceItem(Item item, int amount);
 
-        // Public Methods
+        // Public Methods        
         public void DestroyInventory()
         {
             _items.Clear();
@@ -46,7 +46,7 @@ namespace Tools.Inventory
             OnRefreshItems = null;
         }
 
-        protected bool HasItem(out Item item, ItemData itemData)
+        public bool TryGetItem(out Item item, ItemData itemData)
         {
             item = _items.Where(i => i.DataId == itemData.Id)
                 .OrderByDescending(j => j.Quantity)

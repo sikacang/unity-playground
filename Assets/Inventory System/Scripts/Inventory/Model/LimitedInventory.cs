@@ -23,7 +23,7 @@ namespace Tools.Inventory
 
         public override void AddItem(ItemData itemData, int amount)
         {
-            if (HasItem(out Item itemInstance, itemData))
+            if (TryGetItem(out Item itemInstance, itemData))
             {
                 if (itemInstance.CanAddQuantity())
                 {

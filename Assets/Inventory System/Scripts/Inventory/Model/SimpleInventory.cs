@@ -12,7 +12,7 @@ namespace Tools.Inventory
         // Public method
         public override void AddItem(ItemData itemData, int amount)
         {
-            if(HasItem(out Item item, itemData))
+            if(TryGetItem(out Item item, itemData))
             {
                 AddItemProcess(item, itemData, amount);
             }

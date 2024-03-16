@@ -35,7 +35,7 @@ namespace Tools.Inventory
             };
 
             var sceneUI = SceneServiceProvider.GetService<SceneUI>();
-            var page = sceneUI.GetPage(inventoryPageId);
+            /*var page = sceneUI.GetPage(inventoryPageId);
 
             if (page != null)
             {
@@ -44,7 +44,7 @@ namespace Tools.Inventory
                 _view.OnRemoved.AddListener(inventory.RemoveItem);
 
                 page.OnOpen.AddListener(() => _view.PopulateInventory(inventory.Items));
-            }
+            }*/
         }
 
         private void RefreshItems(List<Item> list)

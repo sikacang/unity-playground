@@ -1,9 +1,11 @@
 using Core.UI;
+using DependencyInjection;
 using System.Collections.Generic;
 using Tools.Inventory.Crafting;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
+using UnityServiceLocator;
 
 public class CraftingPage : MonoBehaviour
 {
@@ -14,7 +16,9 @@ public class CraftingPage : MonoBehaviour
 
     public UnityEvent<CraftItem> OnRequestCraft = new();
 
+    [Inject]
     private CraftModel _craftModel;
+
     private UIPage _uiPage;
 
     private void Awake()
@@ -26,6 +30,12 @@ public class CraftingPage : MonoBehaviour
     private void Start()
     {
         ViewEvent.Subscribe(OnViewEvent);
+        
+        ServiceLocator.Global.Get<CraftController>(out var controller);
+        Debug.Log(controller);
+
+        Assert.IsNotNull(_craftModel, "CraftModel is not set");
+        Debug.Log(_craftModel);
     }
 
     private void OnDestroy()

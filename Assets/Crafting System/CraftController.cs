@@ -1,23 +1,25 @@
+using DependencyInjection;
 using Tools.Inventory;
 using Tools.Inventory.Crafting;
 using UnityEngine;
+using UnityServiceLocator;
 
-public class CraftController : MonoBehaviour
-{
-    public CraftDatabase craftDatabase;
+public class CraftController : MonoBehaviour, IDependencyProvider
+{    
     public CraftModel craftModel;
-    public CraftingPage craftPage;
+    public CraftDatabase craftDatabase;
 
     public InventoryController inventoryController;
     public BaseInventoryModel inventory;
 
+    private void Awake()
+    {
+        ServiceLocator.Global.Register(this);
+    }
+
     private void Start()
     {
         craftModel = new CraftModel(craftDatabase);
-
-        craftPage.PrepareCraftModel(craftModel);
-        craftPage.OnRequestCraft.AddListener(OnRequestCraft);
-
         inventory = inventoryController.inventory;
 
         foreach (var craftItem in craftModel.Craftables)
@@ -43,6 +45,12 @@ public class CraftController : MonoBehaviour
         }
 
         return craftItem.IsCraftable && hasEnoughMaterial;
+    }
+
+    [Provide]
+    private CraftModel ProvideModel()
+    {
+        return craftModel;
     }
 
     private void OnRequestCraft(CraftItem craftItem)
